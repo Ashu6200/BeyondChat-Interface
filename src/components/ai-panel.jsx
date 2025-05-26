@@ -17,7 +17,7 @@ import {
 import { hideRightPanel, showRightPanel } from '@/context/features/layoutSlice';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback } from './ui/avatar';
-import HoverCardComponent from './hover-card';
+// import HoverCardComponent from './hover-card';
 import {
   Accordion,
   AccordionContent,
@@ -28,6 +28,7 @@ import { customerMessage, detailsContent } from '@/assets/mockData';
 import { setSendMessageValue } from '@/context/features/valueSlice';
 import DialogModal from './dialog-modal';
 import { addAiConversation } from '@/context/features/conversationSlice';
+import PopoverCardComponent from './popover-card';
 
 const AiPanel = () => {
   const dispatch = useDispatch();
@@ -90,6 +91,7 @@ const AiPanel = () => {
       dispatch(addAiConversation(output));
     }, 5000);
   };
+  const [hoveredItem, setHoveredItem] = useState(false);
   return (
     <aside
       className={`
@@ -172,11 +174,20 @@ const AiPanel = () => {
                                 <p key={itemIndex}>
                                   {item.text}
                                   {!isAgent && (
-                                    <HoverCardComponent item={item.text}>
-                                      <span className='inline-flex items-center justify-center w-4 h-4 bg-blue-600 rounded-full text-white text-xs font-medium ml-1 cursor-pointer'>
+                                    <PopoverCardComponent
+                                      item={item.text}
+                                      // hoveredItem={hoveredItem}
+                                      // setHoveredItem={setHoveredItem}
+                                    >
+                                      <span
+                                        // onClick={() =>
+                                        //   setHoveredItem(!hoveredItem)
+                                        // }
+                                        className='inline-flex items-center justify-center w-4 h-4 bg-blue-600 rounded-full text-white text-xs font-medium ml-1 cursor-pointer'
+                                      >
                                         {messageIndex}
                                       </span>
-                                    </HoverCardComponent>
+                                    </PopoverCardComponent>
                                   )}
                                 </p>
                               ))}

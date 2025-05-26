@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
 import { Button } from './ui/button';
 import { SquareArrowOutUpRight } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { setAiSendMessageValue } from '@/context/features/valueSlice';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
-const HoverCardComponent = ({ item, children }) => {
+const PopoverCardComponent = ({ item, children }) => {
   const dispatch = useDispatch();
   const deepClone = (obj) =>
     typeof structuredClone === 'function'
@@ -31,9 +31,9 @@ const HoverCardComponent = ({ item, children }) => {
     dispatch(setAiSendMessageValue(deepClone(text)));
   };
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>{children}</HoverCardTrigger>
-      <HoverCardContent className='w-80'>
+    <Popover>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent className='w-80'>
         <div className='flex flex-col justify-between space-x-1'>
           <div>
             <h2 className='text-sm font-bold text-gray-800 mb-1'>
@@ -56,9 +56,9 @@ const HoverCardComponent = ({ item, children }) => {
             Add to composer
           </Button>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 
-export default HoverCardComponent;
+export default PopoverCardComponent;

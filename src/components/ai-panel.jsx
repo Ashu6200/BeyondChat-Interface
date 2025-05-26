@@ -24,9 +24,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './ui/accordion';
-import { detailsContent } from '@/assets/mockData';
+import { customerMessage, detailsContent } from '@/assets/mockData';
 import { setSendMessageValue } from '@/context/features/valueSlice';
 import DialogModal from './dialog-modal';
+import { addAiConversation } from '@/context/features/conversationSlice';
 
 const AiPanel = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,36 @@ const AiPanel = () => {
 
   const handleComposer = (chat) => {
     dispatch(setSendMessageValue(deepClone(chat)));
+  };
+  const [message, setMessage] = useState('');
+  const handleSend = (e) => {
+    e.preventDefault();
+    const output = {
+      sender: 'agent',
+      message: {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                text: message,
+              },
+            ],
+          },
+        ],
+      },
+    };
+    dispatch(addAiConversation(output));
+    setMessage('');
+    setTimeout(() => {
+      const output = {
+        sender: 'ai',
+        message: customerMessage,
+      };
+      dispatch(addAiConversation(output));
+    }, 5000);
   };
   return (
     <aside
@@ -256,9 +287,22 @@ const AiPanel = () => {
                 <Input
                   type='text'
                   placeholder='Search'
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSend(e);
+                    }
+                  }}
                   className='flex-1 border-none focus:ring-0 text-xs font-normal outline-none placeholder:font-normal placeholder:text-xs text-black placeholder:text-black'
                 />
-                <div className='absolute right-2 flex items-center gap-1'>
+                <div
+                  className='absolute right-2 flex items-center gap-1'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSend(e);
+                  }}
+                >
                   <MoveUp className='w-4 h-4 text-black cursor-pointer ' />
                 </div>
               </div>

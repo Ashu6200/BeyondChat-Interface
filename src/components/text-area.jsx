@@ -37,6 +37,10 @@ import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerConversation } from '@/context/features/conversationSlice';
+import {
+  setAiSendMessageValue,
+  setSendMessageValue,
+} from '@/context/features/valueSlice';
 
 const TextareaComponent = () => {
   const dispatch = useDispatch();
@@ -73,11 +77,16 @@ const TextareaComponent = () => {
   useEffect(() => {
     if (conversationMessageText && editor) {
       editor.commands.setContent(conversationMessageText);
+      dispatch(setSendMessageValue(null));
     }
+  }, [conversationMessageText, editor]);
+
+  useEffect(() => {
     if (aiConversationsMessageText && editor) {
       editor.commands.setContent(aiConversationsMessageText);
+      dispatch(setAiSendMessageValue(null));
     }
-  }, [conversationMessageText, aiConversationsMessageText]);
+  }, [aiConversationsMessageText, editor]);
 
   const setLink = () => {
     const previousUrl = editor?.getAttributes('link').href;
@@ -123,6 +132,7 @@ const TextareaComponent = () => {
       message: message,
     };
     dispatch(addCustomerConversation(output));
+    editor.commands.setContent('');
     setTimeout(() => {
       const output = {
         sender: 'customer',
